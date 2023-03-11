@@ -1,5 +1,6 @@
 CC=gcc
-CFLAGS= -Wall -Werror -g
+CFLAGS= -Wall -g
+VALGRIND=valgrind
 LD:=$(CC)
 Target:=bin
 TOP_DIR:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
@@ -19,6 +20,10 @@ all: build_prepare $(BIN_PATH)/$(Target)
 
 run: all
 	@$(BIN_PATH)/$(Target) $(ARG)
+
+val: all
+	@$(VALGRIND) $(BIN_PATH)/$(Target)
+
 
 $(BIN_PATH)/$(Target): $(OBJ_WITH_BUILD_DIR)
 	@echo + LD $@
