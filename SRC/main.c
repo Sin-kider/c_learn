@@ -1,13 +1,13 @@
 #include "../INC/main.h"
-int main()
-{
-    int age = 10;
-    // int height;
-    int height = 180;
+#include <stdio.h>
 
-    // printf("I am %d years old.\n");
-    printf("I am %d years old.\n", age);
-    printf("I am %d inches tall.\n", height);
+/* This is a comment. */
+int main(int argc, char *argv[])
+{
+    int distance = 100;
+
+    // this is also a comment
+    printf("You are %d miles away.\n", distance);
 
     return 0;
 }
