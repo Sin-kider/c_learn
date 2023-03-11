@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS= -Wall -g
+CFLAGS= -Wall -Werror -g
 LD:=$(CC)
 Target:=bin
 TOP_DIR:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
