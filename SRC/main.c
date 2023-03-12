@@ -1,30 +1,40 @@
 #include "../INC/main.h"
+#include <string.h>
 
 int main(int argc, char *argv[])
 {
-    int bugs = 100;
-    double bug_rate = 1.2;
-
-    printf("You have %d bugs at the imaginary rate of %f.\n",
-            bugs, bug_rate);
-
-    unsigned long universe_of_defects = 0xffffffffffffffffffffff;
-    printf("The entire universe has %ld bugs.\n",
-            universe_of_defects);
-
-    double expected_bugs = bugs * bug_rate;
-    printf("You are expected to have %f bugs.\n",
-            expected_bugs);
-
-    double part_of_universe = expected_bugs / universe_of_defects;
-    printf("That is only a %e portion of the universe.\n",
-            part_of_universe);
-
-    // this makes no sense, just a demo of something weird
-    char nul_byte = '\0';
-    int care_percentage = bugs * nul_byte;
-    printf("Which means you should care %d%%.\n",
-            care_percentage);
-
-    return 0;
+  int areas[] = {10, 12, 13, 14, 20};
+  char name[] = "Zed";
+  char full_name[] = {
+      'Z', 'e', 'd',
+       ' ', 'A', '.', ' ',
+       'S', 'h', 'a', 'w', '\0'
+  };
+  areas[0] = 100;
+  areas[1] = name[0];
+  name[0] = 'S';
+  name[1] = 'i';
+  name[2] = 'n';
+  strcpy(full_name, "Sin_kider");
+  // WARNING: On some systems you may have to change the
+  // %ld in this code to a %u since it will use unsigned ints
+  printf("The size of an int: %ld\n", sizeof(int));
+  printf("The size of areas (int[]): %ld\n",
+          sizeof(areas));
+  printf("The number of ints in areas: %ld\n",
+          sizeof(areas) / sizeof(int));
+  printf("The first area is %d, the 2nd %d.\n",
+          areas[0], areas[1]);
+  printf("The size of a char: %ld\n", sizeof(char));
+  printf("The size of name (char[]): %ld\n",
+          sizeof(name));
+  printf("The number of chars: %ld\n",
+          sizeof(name) / sizeof(char));
+  printf("The size of full_name (char[]): %ld\n",
+          sizeof(full_name));
+  printf("The number of chars: %ld\n",
+          sizeof(full_name) / sizeof(char));
+  printf("name=\"%s\" and full_name=\"%s\"\n",
+          name, full_name);
+  return 0;
 }
