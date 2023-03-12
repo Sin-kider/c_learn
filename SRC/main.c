@@ -1,25 +1,19 @@
 #include "../INC/main.h"
 
 int main(int argc, char *argv[]) {
-  // go through each string in argv
+  int i = 0;
 
-  int i = argc;
-  while (i > 0) {
-    printf("arg %d: %s\n", i - 1, argv[i - 1]);
-    --i;
-  }
+  if (argc == 1) {
+    printf("You only have two argument. You suck.\n");
+  } else if (argc > 1 && argc < 4) {
+    printf("Here's your arguments:\n");
 
-  // let's make our own array of strings
-  char *states[] = {"California", "Oregon", "Washington", "Texas"};
-
-  int num_states = 4;
-  i = 0; // watch for this
-  while (i < num_states) {
-    if (i < argc) {
-      states[i] = argv[i];
+    for (i = 0; i < argc; i++) {
+      printf("%s ", argv[i]);
     }
-    printf("state %d: %s\n", i, states[i]);
-    i++;
+    printf("\n");
+  } else {
+    printf("You have too many arguments. You suck.\n");
   }
 
   return 0;
