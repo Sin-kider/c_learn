@@ -29,7 +29,7 @@ $(BIN_PATH)/$(Target): $(OBJ_WITH_BUILD_DIR)
 	@echo + LD $@
 	@$(LD) -I $(INC_PATH) -o $@ $^
 
-$(OBJ_PATH)/%.o: %.c
+$(OBJ_PATH)/%.o: %.c $(INC_PATH)/*.h
 	@echo + CC $<
 	@mkdir -p $(dir $@)
 	@$(CC) -c $(CFLAGS) -o $@ $<
