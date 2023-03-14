@@ -7,6 +7,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include <errno.h>
+#include <stdint.h>
 #include "dbg.h"
 
 #endif
