@@ -1,111 +1,91 @@
 #include "../INC/minunit.h"
-#include "../INC/list.h"
+#include "../INC/list_algos.h"
+#include <sys/time.h>
 #include <assert.h>
+#include <string.h>
 
-static List *list = NULL;
-char *test1 = "test1 data";
-char *test2 = "test2 data";
-char *test3 = "test3 data";
+struct timeval tv_begin,tv_end;
 
+char *values[] = {"XXXX", "1234", "abcd", "xjvef", "NDSS"};
+#define NUM_VALUES 5
 
-char *test_create()
+List *create_words()
 {
-    list = List_create();
-    mu_assert(list != NULL, "Failed to create list.");
+    int i = 0;
+    List *words = List_create();
+
+    for(i = 0; i < NUM_VALUES; i++) {
+        List_push(words, values[i]);
+    }
+
+    return words;
+}
+
+int is_sorted(List *words)
+{
+    LIST_FOREACH(words, first, next, cur) {
+        if(cur->next && strcmp(cur->value, cur->next->value) > 0) {
+            debug("%s %s", (char *)cur->value, (char *)cur->next->value);
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+char *test_bubble_sort()
+{
+    List *words = create_words();
+
+    // should work on a list that needs sorting
+    int rc = List_bubble_sort(words, (List_compare)strcmp);
+    mu_assert(rc == 0, "Bubble sort failed.");
+    mu_assert(is_sorted(words), "Words are not sorted after bubble sort.");
+
+    // should work on an already sorted list
+    rc = List_bubble_sort(words, (List_compare)strcmp);
+    mu_assert(rc == 0, "Bubble sort of already sorted failed.");
+    mu_assert(is_sorted(words), "Words should be sort if already bubble sorted.");
+
+    List_destroy(words);
+
+    // should work on an empty list
+    words = List_create(words);
+    rc = List_bubble_sort(words, (List_compare)strcmp);
+    mu_assert(rc == 0, "Bubble sort failed on empty list.");
+    mu_assert(is_sorted(words), "Words should be sorted if empty.");
+
+    List_destroy(words);
 
     return NULL;
 }
 
-
-char *test_destroy()
+char *test_merge_sort()
 {
-    List_clear_destroy(list);
+    List *words = create_words();
 
-    return NULL;
+    // should work on a list that needs sorting
+    List *res = List_merge_sort(words, (List_compare)strcmp);
+    mu_assert(is_sorted(res), "Words are not sorted after merge sort.");
 
-}
+    List *res2 = List_merge_sort(res, (List_compare)strcmp);
+    mu_assert(is_sorted(res), "Should still be sorted after merge sort.");
+    List_destroy(res2);
+    List_destroy(res);
 
-
-char *test_push_pop()
-{
-    List_push(list, test1);
-    mu_assert(List_last(list) == test1, "Wrong last value.");
-
-    List_push(list, test2);
-    mu_assert(List_last(list) == test2, "Wrong last value");
-
-    List_push(list, test3);
-    mu_assert(List_last(list) == test3, "Wrong last value.");
-    mu_assert(List_count(list) == 3, "Wrong count on push.");
-
-    char *val = List_pop(list);
-    mu_assert(val == test3, "Wrong value on pop.");
-
-    val = List_pop(list);
-    mu_assert(val == test2, "Wrong value on pop.");
-
-    val = List_pop(list);
-    mu_assert(val == test1, "Wrong value on pop.");
-    mu_assert(List_count(list) == 0, "Wrong count after pop.");
-
-    return NULL;
-}
-
-char *test_unshift()
-{
-    List_unshift(list, test1);
-    mu_assert(List_first(list) == test1, "Wrong first value.");
-
-    List_unshift(list, test2);
-    mu_assert(List_first(list) == test2, "Wrong first value");
-
-    List_unshift(list, test3);
-    mu_assert(List_first(list) == test3, "Wrong last value.");
-    mu_assert(List_count(list) == 3, "Wrong count on unshift.");
-
-    return NULL;
-}
-
-char *test_remove()
-{
-    // we only need to test the middle remove case since push/shift
-    // already tests the other cases
-
-    char *val = List_remove(list, list->first->next);
-    mu_assert(val == test2, "Wrong removed element.");
-    mu_assert(List_count(list) == 2, "Wrong count after remove.");
-    mu_assert(List_first(list) == test3, "Wrong first after remove.");
-    mu_assert(List_last(list) == test1, "Wrong last after remove.");
-
+    List_destroy(words);
     return NULL;
 }
 
 
-char *test_shift()
+char *all_tests()
 {
-    mu_assert(List_count(list) != 0, "Wrong count before shift.");
-
-    char *val = List_shift(list);
-    mu_assert(val == test3, "Wrong value on shift.");
-
-    val = List_shift(list);
-    mu_assert(val == test1, "Wrong value on shift.");
-    mu_assert(List_count(list) == 0, "Wrong count after shift.");
-
-    return NULL;
-}
-
-
-
-char *all_tests() {
     mu_suite_start();
-
-    mu_run_test(test_create);
-    mu_run_test(test_push_pop);
-    mu_run_test(test_unshift);
-    mu_run_test(test_remove);
-    mu_run_test(test_shift);
-    mu_run_test(test_destroy);
+    gettimeofday(&tv_begin,NULL);
+    mu_run_test(test_bubble_sort);
+    gettimeofday(&tv_end,NULL);
+    printf("%ld\n",tv_end.tv_usec - tv_begin.tv_usec);
+    mu_run_test(test_merge_sort);
 
     return NULL;
 }
